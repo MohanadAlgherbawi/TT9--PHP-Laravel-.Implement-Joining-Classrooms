@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('attachments', function (Blueprint $table) {
         $table->id();
         $table->string('file_path');
-        $table->foreignId('classwork_id')->nullable()->constrained()->nullOnDelete();
+        $table->foreignId('classwork_id')->nullable()->constrained('classwork')->nullOnDelete();
         $table->foreignId('submission_id')->nullable()->constrained()->nullOnDelete();
         $table->timestamps();
 });

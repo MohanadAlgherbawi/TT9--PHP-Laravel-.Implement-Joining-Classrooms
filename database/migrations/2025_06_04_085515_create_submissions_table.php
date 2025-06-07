@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('submissions', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('classwork_id')->constrained()->cascadeOnDelete();
+        $table->foreignId('classwork_id')->constrained('classwork')->cascadeOnDelete();
         $table->foreignId('user_id')->constrained()->cascadeOnDelete();
         $table->text('content')->nullable(); // أو file path
         $table->integer('grade')->nullable();

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->foreignId('classroom_id')->constrained()->cascadeOnDelete();
             $table->foreignId('topic_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('user_id')->constrained()->nullOnDelete(); // المنشئ
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete(); // المنشئ
             $table->timestamps();
 });
 
