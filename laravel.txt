@@ -1,0 +1,284 @@
+::ClassroomController Class : 
+
+--index(Request $request) method : 
+
+
+return response : view , redirect , json-data , file , string
+ return view('classrooms.index');
+$classrooms = Classroom::orderBy('name','DESC')->get() >>
+ return  (Collection of Classroom)(As Array)
+>>  __ querey builder finishes with get() method or first() 
+$success = session('success'); >> get the success message from the session
+return view('classrooms.index',compact('classrooms','success')) >> 
+// compact('classrooms') is the same as ['classrooms' => $classrooms]
+
+--create() method : 
+
+show form and storing data
+
+return view('classrooms.create' ,[
+            'classroom' => new Classroom(), // create a new instance of Classroom model
+        ]);
+
+--show(Classroom $classroom) method : 
+
+return  view ('classrooms.show')
+        ->with([
+            'classroom' => $classroom,
+            
+        ]);
+
+--edit(Classroom $classroom) method : 
+
+        return  view ('classrooms.edit',[
+ 'classroom' => $classroom,
+]);
+
+--store(ClassroomRequest $request) method : 
+
+first validate the request
+$validated = $request->validated() ;
+??>>??<<ClassroomRequest Class ::
+
+--authorize(): bool 
+return true;
+--rules(): array 
+
+ 
+        $this->isMethod('post') ? 'create' : 'update';// $this -_> request object, isMethod checks if the request is a POST request
+        return [
+            'name'=> ['required','string','max:255',function($attribute,$value,$fail){
+                if($value === 'admin') {
+                    $fail('the name field cannot be "admin".');
+                }
+            }], // required field, must be a string, and max length is 255 characters
+            'section'=> 'nullable|string|max:255',// nullable if empty field dont  check next rules
+            'subject'=> 'nullable|string|max:255',
+            'room'=> 'nullable|string|max:255',
+            'cover_image' => 'nullable|image|dimensions:min_width=200,min_height=200|max:2048', // max size 2MB
+        ];
+    }
+--messages(): array 
+
+rn [
+            'name.required' => 'The name field is required.',
+            'name.string' => 'The name field must be a string.',
+            'name.max' => 
+
+
+??>>??<< Back to classroomController Class store method
+
+// dd ($request->all()) ; // return all data from the request
+        // dd( $request->only('name','section'));
+        // dd( $request->except('name','section')); // return all except name and section from the request
+        // dd( $request->input('name')); // return name from the request
+
+  if($request->hasFile('cover_image')) {
+               $file = $request->file('cover_image'); // return the file object (uploaded file)
+               $path =Classroom::uploadCoverImage($file); // upload the file and return the path
+               $validated['cover_image_path'] = $path; // add the path to the validated data
+            } 
+
+??>>??<< class Classroom extends Model 
+
+public static string $disk =  'uploads';
+
+
+    protected $fillable = ['name', 'section', 'subject', 'room','code','theme','cover_image_path'];// These fields are mass assignable
+    // protected $guarded = ['id', 'created_at', 'updated_at'];// These fields are not mass assignable
+
+--uploadCoverImage($file) : 
+
+
+$path = $file->store('/covers',
+            [
+                'disk'=> static::$disk // store the file in the uploads disk
+                ,
+            ]);
+            return $path;
+
+--deleteCoverImage($path) : 
+
+        return Storage::disk(Classroom::$disk  )->delete($path);
+
+??>>??<< Back to store method 
+
+
+            $validated['code'] = Str::random(10); // add code to the validated data
+           
+            $classroom = Classroom::create( $validated);// insert into database 
+
+ return redirect()->route('classrooms.index')
+        ->with('success', 'Classroom created successfully.'); 
+
+--update(ClassroomRequest $request, Classroom $classroom)  : 
+
+        $validated = $request->validated() ;
+
+if($request->hasFile('cover_image')) {
+               $file = $request->file('cover_image'); // return the file object (uploaded file)
+               $path = Classroom::uploadCoverImage($file); 
+               $validated['cover_image_path'] = $path; // add the path to the validated data
+            } 
+            $old = $classroom->cover_image_path; // get the old cover image path
+        $classroom->update($validated); // update the classroom with the validated data
+        if($old && $old != $classroom->cover_image_path) {
+            // delete the old cover image file if it exists and is not the same as the new one
+            Classroom::deleteCoverImage($old);
+        }
+ Session::flash('success','Classroom Updated');
+        Session::flash('error','Error occure');
+        return redirect()->route('classrooms.index');
+
+
+--destroy(Classroom $classroom) : 
+
+$classroom->delete(); // delete the classroom from database and object
+         Classroom::deleteCoverImage($classroom->cover_image_path);
+        return redirect()->route('classrooms.index')
+        ->with('success', 'Classroom deleted successfully.'); // redirect to index with success message
+
+
+-------------------------------------------------------------------------------------------------------------------
+
+View/Components 
+
+
+::class MainLayout extends Component
+
+
+public $title;
+    /**
+     * Create a new component instance.
+     */
+    public function __construct( $title)
+    {
+        //
+        $this->title = $title;
+    }
+
+    /**
+     * Get the view / contents that represent the component.
+     */
+    public function render(): View|Closure|string
+    {
+        return view('layouts.main',[
+            'title'=> $this->title
+        ]);
+    }
+}
+
+----------------------------------------------------------------------------------------------
+
+database 
+./factories
+
+::class topicFactory
+
+--definition(): array
+    {
+        return [
+            //
+            'name' => fake()->word(),
+            'id' => fake()->unique()->randomNumber(5),
+            'classroom_id' => fake()->numberBetween(1, 100), // Assuming classroom IDs are between 1 and 100
+            'user_id' => fake()->numberBetween(1, 50), // Assuming user IDs are between 1 and 50
+        ];
+    }
+
+class UserFactory
+/**
+     * The current password being used by the factory.
+     */
+    protected static ?string $password;
+@return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'email_verified_at' => now(),
+            'password' => static::$password ??= Hash::make('password'),
+            'remember_token' => Str::random(10),
+        ];
+    }/**
+     * Indicate that the model's email address should be unverified.
+     */
+    public function unverified(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'email_verified_at' => null,
+        ]);
+    }
+}
+
+
+
+UU Migrations : 
+
+::create_classrooms_table CLass :: 
+
+--up() void 
+
+  Schema::create('classrooms', function (Blueprint $table) {
+                   $table->id();// id BIGINY unsigned auto_increment primary key
+            $table->string('name',255);// name VARCHAR(255) not null not case sensitive
+            $table->string('code',10)->unique();
+            $table->string('section' )->nullable();
+            $table->string('subject')->nullable();
+            $table->string('room')->nullable();
+            $table->string('cover_image_path')->nullable();// iitavef binary case sensitive
+            $table->string('theme')->nullable();
+            $table->foreignId('user_id')
+            ->nullable()
+            ->constrained('users','id')//relationship with users table
+            ->nullOnDelete();// BIGINT unsigned not null foreign key references users(id) on delete cascade
+            $table->enum('status', ['active', 'archived'])
+                ->default('active');// status ENUM('active', 'archived') not null default 'active'
+            $table->timestamps();// created at + updated at timestamps  
+        });
+
+::create_topics_table Class :: 
+
+--up() void :
+ 
+  Schema::create('topics', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->foreignId('classroom_id')
+                ->constrained('classrooms', 'id')
+                ->cascadeOnDelete();
+                 // Foreign key to classrooms table
+                $table->foreignId('user_id')
+                ->nullable()
+                ->constrained('users', 'id')
+                ->nullOnDelete(); // Foreign key to users table, nullable on delete
+            
+
+UU Seeders
+
+::class classroomSeeder
+
+run(): void
+    {
+        //
+        DB::table("classroom")->insert([
+            'name' => 'Classroom',
+            ''=> '',
+        ]);
+
+::class UserSeeder 
+
+run(): void
+    {
+        // no rollback , and can create if exist
+        // Query Builder
+        DB::table('users')->insert([
+            'name'=> 'Muhannad Algherbawi',
+            'email'=> 'm@gherbawi.ps',
+            'password'=> Hash::make('password'),//sha.md5,rsa
+        ]);
+    }
+
+

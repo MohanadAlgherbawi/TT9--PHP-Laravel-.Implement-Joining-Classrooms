@@ -1,0 +1,14 @@
+[0;1;32m●[0m mysql.service - MySQL Community Server
+     Loaded: loaded (]8;;file://mohanad/usr/lib/systemd/system/mysql.service/usr/lib/systemd/system/mysql.service]8;;; [0;1;32menabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;32mactive (running)[0m since Mon 2025-06-30 14:05:12 EEST; 4s ago
+    Process: 317489 ExecStartPre=/usr/share/mysql/mysql-systemd-start pre (code=exited, status=0/SUCCESS)
+   Main PID: 317497 (mysqld)
+     Status: "[0;1;36mServer is operational[0m"
+      Tasks: 38 (limit: 9085)
+     Memory: 399.9M (peak: 413.0M)
+        CPU: 839ms
+     CGroup: /system.slice/mysql.service
+             └─[0;38;5;245m317497 /usr/sbin/mysqld[0m
+
+Jun 30 14:05:11 mohanad systemd[1]: Starting mysql.service - MySQL Community Server...
+Jun 30 14:05:12 mohanad systemd[1]: Started mysql.service - MySQL Community Server.

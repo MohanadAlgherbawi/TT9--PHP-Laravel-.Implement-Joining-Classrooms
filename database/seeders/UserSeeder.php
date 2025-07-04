@@ -16,10 +16,12 @@ class UserSeeder extends Seeder
     {
         // no rollback , and can create if exist
         // Query Builder
-        DB::table('users')->insert([
-            'name'=> 'Muhannad Algherbawi',
-            'email'=> 'm@gherbawi.ps',
-            'password'=> Hash::make('password'),//sha.md5,rsa
-        ]);
+         DB::table('users')->updateOrInsert(
+            ['email' => 'm@gherbawi.ps'], // شرط وجود المستخدم
+            [
+                'name' => 'Muhannad Algherbawi',
+                'password' => Hash::make('1234'),
+            ]
+        );
     }
 }

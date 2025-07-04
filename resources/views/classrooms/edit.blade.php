@@ -10,10 +10,11 @@
     <h1>Edit Classroom</h1>
     <form action="{{ route('classrooms.update',$classroom->id) }}" method="post" enctype="multipart/form-data">
        
-        {{--
+        
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        {{csrf_field()}}// return input field
-        --}}
+        {{csrf_field()}}
+        
+       
         @csrf
         @method('put') {{-- to specify the method for the form submission --}}
         @if($errors->any())

@@ -20,13 +20,19 @@ class ClassroomRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
+    {   
+        
+        // $this->isMethod('post') ? 'create' : 'update';// $this -_> request object, isMethod checks if the request is a POST request
         return [
-            'name'=> 'required|string|max:255',
+            'name'=> ['required','string','max:255',function($attribute,$value,$fail){
+                if($value === 'admin') {
+                    $fail('the name field cannot be "admin".');
+                }
+            }], // required field, must be a string, and max length is 255 characters
             'section'=> 'nullable|string|max:255',// nullable if empty field dont  check next rules
             'subject'=> 'nullable|string|max:255',
             'room'=> 'nullable|string|max:255',
-            'cover_image' => 'nullable|image|dimensions:min_width=200,min_height=200|max:2048', // max size 2MB
+            'cover_image' => 'required|image|dimensions:min_width=200,min_height=200|max:2048', // max size 2MB
         ];
     }
     public function messages(): array

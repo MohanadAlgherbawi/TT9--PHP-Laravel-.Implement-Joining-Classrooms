@@ -24,7 +24,7 @@ return new class extends Migration
             ->nullable()
             ->constrained('users','id')//relationship with users table
             ->nullOnDelete();// BIGINT unsigned not null foreign key references users(id) on delete cascade
-            $table->enum('status', ['active', 'archived'])
+            $table->enum('status', ['active', 'archived'])// لو بدي اضيف قيمة جديدة deleted 
                 ->default('active');// status ENUM('active', 'archived') not null default 'active'
             $table->timestamps();// created at + updated at timestamps  
         });

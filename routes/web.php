@@ -1,35 +1,55 @@
 <?php
 
-use App\Http\Controllers\ClassroomsController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TopicsController;
-use App\Models\Classroom;
+use App\Http\Controllers\ClassroomsController;
+use App\Http\Controllers\JoinClassroomController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-    
 })->name('home');
-// Route::get('/classrooms',[ClassroomsController::class, 'index'])
-// ->name('classrooms.index');
-// Route::get('/classrooms/create',[ClassroomsController::class,'create'])
-// ->name('classrooms.create');
 
-// Route::get('classrooms/{classroom}/edit',[ClassroomsController::class,'edit'])
-// ->name('classrooms.edit')
-// ->where('classroom', '\d+');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-// Route::get('classrooms/{classroom}',[ClassroomsController::class,'show'])
-// ->where('classroom', '\d+')// // Regular expression to ensure classroom is a numberq
-// ->name('classrooms.show');
-// Route::post('/classrooms',[ClassroomsController::class,'store'])
-// ->name('classrooms.store');
-// Route::put('/classrooms/{classroom}',[ClassroomsController::class,'update'])
-// ->name('classrooms.update')
-// ->where('classroom', '\d+');
-// Route::delete('/classrooms/{classroom}',[ClassroomsController::class,'destroy'])
-// ->name('classrooms.destroy')
-// ->where('classroom', '\d+');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); 
+});
 
+require __DIR__.'/auth.php'; 
+// scope uses and softs on select querey fun just
+// and soft del is a scope fun (global scope) but we have local scope also
+
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('/classrooms/trashed')
+    ->as('classrooms.')
+    ->controller(ClassroomsController::class)
+    ->group(function () {
+     Route::get( '/','trashed')
+    ->name('trashed');
+    Route::put('/{classroom}', 'restore')
+    ->name('restore');
+    Route::delete('/{classroom}', 'forceDelete')
+    ->name('force-delete');
+    });
+
+    Route::get('/classrooms/{classroom}/join',[JoinClassroomController::class,'create'])
+    ->name('classrooms.show');
+
+    Route::get('/classrooms/{classroom}/join',[JoinClassroomController::class,'store'])
+    ;
+    Route::resources([
+    'topics'=> TopicsController::class,
+    'classrooms' => ClassroomsController::class,
+    ]
+    
+);
+
+});
 Route::resource('/classrooms', ClassroomsController::class)
 ->names([
     'index' => 'classrooms.index',
@@ -44,7 +64,3 @@ Route::resource('/classrooms', ClassroomsController::class)
 
 Route::resource('topics',TopicsController::class);
 
-Route::resources([
-    'topics'=> TopicsController::class,
-    'classrooms' => ClassroomsController::class,
-]);

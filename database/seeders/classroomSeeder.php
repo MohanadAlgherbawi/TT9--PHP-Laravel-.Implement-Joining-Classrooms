@@ -16,7 +16,6 @@ class classroomSeeder extends Seeder
         //
         DB::table("classroom")->insert([
             'name' => 'Classroom',
-            ''=> '',
         ]);
     }
 }
