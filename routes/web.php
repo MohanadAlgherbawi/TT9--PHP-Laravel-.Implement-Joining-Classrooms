@@ -29,38 +29,16 @@ Route::middleware(['auth'])->group(function () {
     ->as('classrooms.')
     ->controller(ClassroomsController::class)
     ->group(function () {
-     Route::get( '/','trashed')
-    ->name('trashed');
-    Route::put('/{classroom}', 'restore')
-    ->name('restore');
-    Route::delete('/{classroom}', 'forceDelete')
-    ->name('force-delete');
+    Route::get( '/','trashed')->name('trashed');
+    Route::put('/{classroom}', 'restore')->name('restore');
+    Route::delete('/{classroom}', 'forceDelete')->name('force-delete');
     });
-
     Route::get('/classrooms/{classroom}/join',[JoinClassroomController::class,'create'])
-    ->name('classrooms.show');
-
-    Route::get('/classrooms/{classroom}/join',[JoinClassroomController::class,'store'])
-    ;
+    ->name('classrooms.join');
+    Route::post('/classrooms/{classroom}/join',[JoinClassroomController::class,'store'])->name('classrooms.join.store');
     Route::resources([
     'topics'=> TopicsController::class,
     'classrooms' => ClassroomsController::class,
     ]
-    
-);
-
+    );
 });
-Route::resource('/classrooms', ClassroomsController::class)
-->names([
-    'index' => 'classrooms.index',
-    'create' => 'classrooms.create',
-    'store' => 'classrooms.store',
-    'show' => 'classrooms.show',
-    'edit' => 'classrooms.edit',
-    'update' => 'classrooms.update',
-    'destroy' => 'classrooms.destroy',
-])->parameters(['classrooms' => 'classroom']); // to use classroom instead of classrooms in the route
-
-
-Route::resource('topics',TopicsController::class);
-

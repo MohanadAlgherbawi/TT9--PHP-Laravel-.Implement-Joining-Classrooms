@@ -19,7 +19,6 @@ class topicFactory extends Factory
         return [
             //
             'name' => fake()->word(),
-            'id' => fake()->unique()->randomNumber(5),
             'classroom_id' => fake()->numberBetween(1, 100), // Assuming classroom IDs are between 1 and 100
             'user_id' => fake()->numberBetween(1, 50), // Assuming user IDs are between 1 and 50
         ];
