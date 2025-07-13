@@ -38,7 +38,7 @@ class Classroom extends Model
             return $path;
     }
     public static function deleteCoverImage($path){
-        if(!$path || Storage::disk(Classroom::$disk)->exists($path)){
+        if(!$path || !Storage::disk(Classroom::$disk)->exists($path)){
             return;
         }
         return Storage::disk(Classroom::$disk  )->delete($path);
