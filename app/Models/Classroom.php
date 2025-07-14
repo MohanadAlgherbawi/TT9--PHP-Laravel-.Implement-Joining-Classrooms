@@ -58,6 +58,10 @@ class Classroom extends Model
     {
         $query->where('status','=', $status);
     }
+    public function join($user_id,$role = 'student')
+    {
+        return null;
+    }
 
     // global scope بيطبق بشكل تلقائي
 }
