@@ -36,9 +36,7 @@ class UserClassroomScope implements Scope
     // or classrooms.id in (select classroom_id from classroom_user where user_id = ?)
     // or exists (select 1 from classroom_user where classroom_id = classrooms.id and user_id = ?)
 }
-public function test() {
-    return null;
-}
+
 
 }
 
