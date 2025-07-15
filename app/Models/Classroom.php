@@ -60,6 +60,7 @@ class Classroom extends Model
     }
     public function join($user_id,$role = 'student')
     {
+        return null;
     }
 
     // global scope بيطبق بشكل تلقائي

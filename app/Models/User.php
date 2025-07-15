@@ -45,4 +45,8 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
+    function test(){
+        return null;
+    }
 }
+
