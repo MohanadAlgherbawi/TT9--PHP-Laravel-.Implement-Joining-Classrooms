@@ -1,8 +1,8 @@
 <x-main-layout title="Classrooms">
     <div class="container">
         <h1>Classrooms</h1>
-        <x-alert name="success" class="alert-success" />
-        <x-alert name="error" class="alert-danger" />
+        {{-- <x-alert name="success" class="alert-success" />
+        <x-alert name="error" class="alert-danger" /> --}}
         <div class="row">
             @if (session()->has('success'))
                 <div class="alert alert-success">

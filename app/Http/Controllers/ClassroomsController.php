@@ -45,7 +45,7 @@ class ClassroomsController extends Controller
 
     public function show(Classroom $classroom) 
     {     
-        return  view ('classrooms.show')
+        return view('classrooms.show')
         ->with([
             'classroom' => $classroom,
         ]);                                

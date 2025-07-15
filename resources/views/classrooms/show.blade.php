@@ -6,7 +6,7 @@
     @section('content')
     
     <div class="container">
-    <h1>{{$classroom->name }}# {{ $classroom->id }}</h1>
+    <h1>{{$classroom->name }} - {{ $classroom->id }}</h1>
     <h3>{{$classroom->section}}</h3>
     <div class="col-md-3">
         <div class="border rounded p-3 text-center"> 

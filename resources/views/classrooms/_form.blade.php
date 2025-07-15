@@ -29,7 +29,7 @@
    
   <div class="form-floating mb-3">
     @if ($classroom->cover_image_path)
-        <img src="{{Storage::disk('uploads')->url( $classroom->cover_image_path)}}" alt="Classroom Image" class="card-img-top">
+        {{-- <img src="{{Storage::disk('uploads')->url( $classroom->cover_image_path)}}" alt="Classroom Image" class="card-img-top"> --}}
       <img src="/uploads/{{$classroom->cover_image_path}}" class="card-img-top" alt="Classroom Image">
 
     @endif

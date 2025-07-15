@@ -1,5 +1,5 @@
     @extends('layouts.master')
-    @section('title', 'Edit Classroom' . $classroom->name)
+    @section('title', 'Edit Classroom ' . $classroom->name)
     
     
 
