@@ -46,7 +46,6 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
     function test(){
-        return null;
     }
 }
 
