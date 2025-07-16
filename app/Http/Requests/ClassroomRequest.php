@@ -48,7 +48,7 @@ class ClassroomRequest extends FormRequest
             'room.max' => 'The room field may not be greater than 255 characters.',
             'cover_image.image' => 'The cover image must be an image file.',
             'cover_image.dimensions' => 'The cover image must have minimum dimensions of 200x200 pixels.',
-            'cover_image.max' => 'The cover image may not be larger than 2MB.',
+            'cover_image.max' => 'The cover image may not be larger than 2MB.',// comment
         ];
     }
 }
