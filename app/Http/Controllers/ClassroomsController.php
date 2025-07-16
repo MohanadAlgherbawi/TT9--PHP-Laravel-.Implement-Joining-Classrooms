@@ -30,7 +30,6 @@ class ClassroomsController extends Controller
         ->orderBy('name','DESC')
       //  ->withoutGlobalScope() cancel soft del and all global scopes
         ->get(); 
-        // $classrooms = FacadesDB::table('classrooms');
         $success = session('success');
         // ->orderBy('created_at','DESC')->get();
         return view('classrooms.index',compact('classrooms','success'));
