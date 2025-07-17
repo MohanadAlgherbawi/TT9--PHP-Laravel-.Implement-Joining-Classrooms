@@ -67,7 +67,7 @@ class ClassroomsController extends Controller
                $path =Classroom::uploadCoverImage($file); 
                $validated['cover_image_path'] = $path; 
             }   
-            $validated['code'] = Str::random(10); 
+            // $validated['code'] = Str::random(10); 
             $validated['user_id'] = Auth::id();
             DB::beginTransaction();
             try{

@@ -1,3 +1,7 @@
+<x-alert name="error" id="errror" class="alert-danger"/>
+
+
+
 <x-form.floating-control name="name">
       <x-slot:label>{{-- Custom slot --}}
         <label for="name">Classroom Name</label>

@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use App\Models\ClassroomObserver;
+use App\Observers\ClassroomObserver as ObserversClassroomObserver;
 
 class Classroom extends Model
 {
@@ -27,8 +31,27 @@ class Classroom extends Model
     //     static::addGlobalScope('user', function (Builder $query) {
     //         $query->where('user_id','=', Auth::id());
     // });
+    static::observe(ObserversClassroomObserver::class);
     static::addGlobalScope(new UserClassroomScope);
+    static::creating(function (Classroom $classroom){
+        $classroom->code = Str::random(8);
+        $classroom->user_id = Auth::id();
+    });
+    static::forceDeleted(function (Classroom $classroom){
+        static::deleteCoverImage($classroom->cover_image_path);
+    });
+    static::deleting(function (Classroom $classroom){
+        $classroom->status = 'deleted';
+    });
+    static::restored(function (Classroom $classroom){
+        $classroom->status = 'active';
+        $classroom->save();
+    });
 }
+    public function getRouteKeyName()
+    {
+        return 'id';
+    }
     public  static function uploadCoverImage($file)
     {
         $path = $file->store('/covers',
@@ -70,4 +93,21 @@ class Classroom extends Model
     }
 
     // global scope بيطبق بشكل تلقائي
+    public function getNameAttribute($value)
+    {
+        return strtoupper($value);
+    }
+    public function getCoverImageUrlAttribute()
+    {
+        if($this->cover_image_path){
+            return;
+        }
+        return 'https://placehold.co/800x300';
+    }
+    public function getUrlAttribute()
+    {
+        return route('classrooms.show',$this->id);
+    }
+
+
 }
