@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/{classroom}', 'forceDelete')->name('force-delete');
     });
     Route::get('/classrooms/{classroom}/join',[JoinClassroomController::class,'create'])
+    ->middleware('signed')
     ->name('classrooms.join');
     Route::post('/classrooms/{classroom}/join',[JoinClassroomController::class,'store'])->name('classrooms.join.store');
     Route::resources([

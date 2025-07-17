@@ -18,18 +18,22 @@ class UserClassroomScope implements Scope
     {
         //          
                     if($id = Auth::id())   {     
-                    $builder->where('user_id','=', $id)
-                    ->orWhereExists(function ($query) use($id){
-                        $query->select(DB::raw('1'))
-                        ->from('classroom_user')
-                        ->whereColumn('classroom_id', '=', 'classrooms.id')
-                        ->where('user_id',$id)
+                    $builder
+                    ->where(function (Builder $query) use ($id){
+                            $query->where('user_id','=', $id)
+                            ->orWhereExists(function ($query) use($id){
+                            $query->select(DB::raw('1'))
+                            ->from('classroom_user')
+                            ->whereColumn('classroom_id', '=', 'classrooms.id')
+                            ->where('user_id',$id)
+                        
+                            /*->orWhereRaw('exists (select 1 from classroom_user where classroom_id = classrooms.id and user_id = ?)
+        }',[
+                                $id
+                            ]);*/
+                            ;});
+                    });
                     
-                    /*->orWhereRaw('exists (select 1 from classroom_user where classroom_id = classrooms.id and user_id = ?)
-}',[
-                        $id
-                    ]);*/
-                    ;});
     }
     // Select * from classrooms
     // where user_id = ?

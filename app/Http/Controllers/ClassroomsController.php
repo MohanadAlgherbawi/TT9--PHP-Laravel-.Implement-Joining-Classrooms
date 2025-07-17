@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage as FacadesStorage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
-
+use URL;
 
 class ClassroomsController extends Controller
 {
@@ -47,10 +47,10 @@ class ClassroomsController extends Controller
 
     public function show(Classroom $classroom) 
     {     
-        return view('classrooms.show')
-        ->with([
-            'classroom' => $classroom,
-        ]);                                
+        $invitation_link = URL::temporarySignedRoute('classrooms.join',now()->addHour(3),[
+        'classroom' => $classroom->id,
+        'code' => $classroom->code,
+        ]);                               
     }
     public function edit(Classroom $classroom) 
     {
@@ -72,11 +72,8 @@ class ClassroomsController extends Controller
             DB::beginTransaction();
             try{
                 $classroom = Classroom::create($validated);
-                DB::table('classroom_user')->insert([
-                    'classroom_id' => $classroom->id,
-                    'user_id' => Auth::id(),
-                    'role' => 'teacher',
-                ]);
+                $classroom->join(Auth::id(),'teacher');
+
                 DB::commit();
             }catch(QueryException $e){
                 DB::rollBack();
