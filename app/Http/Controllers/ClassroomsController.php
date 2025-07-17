@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ClassroomRequest;
 use App\Models\Classroom;
+use DB;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB as FacadesDB;
 use Illuminate\Support\Facades\View;
@@ -12,6 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Illuminate\Support\Facades\Session; 
 use Illuminate\Support\Facades\Storage as FacadesStorage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
 
 
 class ClassroomsController extends Controller
@@ -66,7 +69,21 @@ class ClassroomsController extends Controller
             }   
             $validated['code'] = Str::random(10); 
             $validated['user_id'] = Auth::id();
-            $classroom = Classroom::create( $validated);
+            DB::beginTransaction();
+            try{
+                $classroom = Classroom::create($validated);
+                DB::table('classroom_user')->insert([
+                    'classroom_id' => $classroom->id,
+                    'user_id' => Auth::id(),
+                    'role' => 'teacher',
+                ]);
+                DB::commit();
+            }catch(QueryException $e){
+                DB::rollBack();
+                return back()
+                ->with('error',$e->getMessage())
+                ->withInput();
+            }
             return redirect()->route('classrooms.index')
             ->with('success', 'Classroom created successfully.'); 
     }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\UserClassroomScope;
+use DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -60,6 +61,12 @@ class Classroom extends Model
     }
     public function join($user_id,$role = 'student')
     {
+        return DB::table('classroom_user')->insert([
+            'classroom_id' => $this->id,
+            'user_id' => $user_id,
+            'role' => $role,
+            'created_at' => now()
+        ]);
     }
 
     // global scope بيطبق بشكل تلقائي
