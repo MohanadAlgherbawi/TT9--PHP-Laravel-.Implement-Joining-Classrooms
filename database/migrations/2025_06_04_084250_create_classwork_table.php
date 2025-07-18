@@ -16,10 +16,11 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->enum('type', ['assignment', 'quiz', 'question', 'material']);
-            $table->text('description')->nullable();
+            $table->text('description')->nullable();// 4k (text) logtext(4giga)
             $table->foreignId('classroom_id')->constrained()->cascadeOnDelete();
             $table->foreignId('topic_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete(); // المنشئ
+            
             $table->timestamps();
 });
 
