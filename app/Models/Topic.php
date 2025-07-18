@@ -17,4 +17,12 @@ class Topic extends Model
     protected $keyType = 'int'; // Specify the key type if it differs from 'int'
     public $incrementing = true; // Specify if the primary key is auto-incrementing
     public $timestamps = false;
+
+    protected $fillable = [
+        'name','classroom_id','user_id',
+    ];
+    public function classworks()
+    {
+      return $this->hasMany(Classwork::class, 'topic_id','id');  
+    }
 }

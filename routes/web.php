@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TopicsController;
 use App\Http\Controllers\ClassroomsController;
+use App\Http\Controllers\ClassworkController;
 use App\Http\Controllers\JoinClassroomController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,4 +43,10 @@ Route::middleware(['auth'])->group(function () {
     'classrooms' => ClassroomsController::class,
     ]
     );
+    Route::resource('classrooms.classworks' , ClassworkController::class)
+    ;
+
 });
+
+
+

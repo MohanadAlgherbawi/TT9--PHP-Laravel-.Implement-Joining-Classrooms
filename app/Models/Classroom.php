@@ -11,8 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use App\Models\ClassroomObserver;
-use App\Observers\ClassroomObserver as ObserversClassroomObserver;
+use App\Observers\ClassroomObserver ;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Classroom extends Model
 {
@@ -20,20 +20,20 @@ class Classroom extends Model
     use HasFactory,SoftDeletes;
     public static string $disk =  'uploads'; 
     protected $fillable = ['name', 'section', 'subject', 'room','code','theme','cover_image_path','user_id'];// These fields are mass assignable
-    // protected $guarded = ['id', 'created_at', 'updated_at'];// These fields are not mass assignable
-    // // = [] All allowable fields
-    // public function getRouteKeyName()
-    // {
-    //     return 'code'; // Use code instead of id for route model binding
-    // }
+   
     protected static function booted()
     {
-    //     static::addGlobalScope('user', function (Builder $query) {
-    //         $query->where('user_id','=', Auth::id());
-    // });
-   
-    
-}
+        static::observe(ClassroomObserver::class);
+        static::addGlobalScope(new UserClassroomScope);
+    }
+    public function classworks(): HasMany
+    {
+      return $this->hasMany(Classwork::class, 'classroom_id','id');  
+    }
+    public function topics(): HasMany
+    {
+      return $this->hasMany(Topic::class, 'classroom_id','id');  
+    }
     public function getRouteKeyName()
     {
         return 'id';
