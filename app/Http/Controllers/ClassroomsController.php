@@ -50,7 +50,12 @@ class ClassroomsController extends Controller
         $invitation_link = URL::temporarySignedRoute('classrooms.join',now()->addHour(3),[
         'classroom' => $classroom->id,
         'code' => $classroom->code,
-        ]);                               
+        ]);   
+        return View::make('classrooms.show')
+        ->with([
+            'classroom' => $classroom,
+            'invitation_link' => $invitation_link,
+        ]);                            
     }
     public function edit(Classroom $classroom) 
     {

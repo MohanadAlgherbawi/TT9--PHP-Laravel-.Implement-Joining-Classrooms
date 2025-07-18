@@ -31,22 +31,8 @@ class Classroom extends Model
     //     static::addGlobalScope('user', function (Builder $query) {
     //         $query->where('user_id','=', Auth::id());
     // });
-    static::observe(ObserversClassroomObserver::class);
-    static::addGlobalScope(new UserClassroomScope);
-    static::creating(function (Classroom $classroom){
-        $classroom->code = Str::random(8);
-        $classroom->user_id = Auth::id();
-    });
-    static::forceDeleted(function (Classroom $classroom){
-        static::deleteCoverImage($classroom->cover_image_path);
-    });
-    static::deleting(function (Classroom $classroom){
-        $classroom->status = 'deleted';
-    });
-    static::restored(function (Classroom $classroom){
-        $classroom->status = 'active';
-        $classroom->save();
-    });
+   
+    
 }
     public function getRouteKeyName()
     {

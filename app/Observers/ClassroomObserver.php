@@ -3,6 +3,8 @@
 namespace App\Observers;
 
 use App\Models\Classroom;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ClassroomObserver
 {
@@ -27,7 +29,11 @@ class ClassroomObserver
      */
     public function deleted(Classroom $classroom): void
     {
-        //
+        if($classroom->isForceDeleting()){
+            return;
+        }//  عشان بصير تريجير بين ديليتد و فورس ديلتيد لو فورس ديليت وبعمل ساف مش حيحذف الكلاس
+        $classroom->status = 'deleted';
+        $classroom->save();
     }
 
     /**
@@ -36,6 +42,8 @@ class ClassroomObserver
     public function restored(Classroom $classroom): void
     {
         //
+        $classroom->status = 'active';
+        $classroom->save();
     }
 
     /**
@@ -44,5 +52,17 @@ class ClassroomObserver
     public function forceDeleted(Classroom $classroom): void
     {
         //
+                $classroom->deleteCoverImage($classroom->cover_image_path);
+
+    }
+    public function creating(Classroom $classroom)
+    {
+        $classroom->code = Str::random(8);
+        $classroom->user_id = Auth::id();
+    }
+    public function deleting(Classroom $classroom)
+    {
+                $classroom->status = 'deleted';
+
     }
 }
