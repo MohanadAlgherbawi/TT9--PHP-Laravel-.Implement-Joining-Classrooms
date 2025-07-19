@@ -1,7 +1,21 @@
-<x-main-layout :title="$classroom->name">
-     <div class="container">
-    <h1>{{$classroom->name }} - {{ $classroom->id }}</h1>
-    <h3>Classworks</h3>
+ 
+        <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    create
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" 
+        href="{{route('classrooms.classworks.create',[$classroom->id,'type' => 'assignment'])}}"
+        >Assignment</a></li>
+    <li><a class="dropdown-item" 
+        href="{{route('classrooms.classworks.create',[$classroom->id,'type' => 'material'])}}"
+        >Material</a></li>
+    <li><a class="dropdown-item" 
+        href="{{route('classrooms.classworks.create',[$classroom->id,'type' => 'question'])}}"
+        >Question</a></li>
+  </ul>
+</div>
+    </h3>
     <hr>
     
     

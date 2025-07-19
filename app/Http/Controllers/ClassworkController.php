@@ -35,11 +35,25 @@ class ClassworkController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+    public function getType()
+    {
+        $type = request('type');
+        $types =[
+            Classwork::TYPE_ASSIGMEMNT,Classwork::TYPE_MATERIAL,Classwork::TYPE_QUESTION
+        ];
+        if(!in_array($type,$types)){
+            $type = Classwork::TYPE_ASSIGMEMNT;
+        }
+        return $type;
+    }
     public function create(Classroom $classroom)
     {
         //
+        $type = $this->getType();
         return view('classworks.create',[
             'classroom' => $classroom,
+            'type' => $type,
+            
         ]);
     }
 
@@ -48,6 +62,8 @@ class ClassworkController extends Controller
      */
     public function store(Request $request,Classroom $classroom)
     {
+                $type = $this->getType();
+
         //must validation 
         $request->validate([
             'title' => ['required','string','max:255'],
@@ -56,6 +72,7 @@ class ClassworkController extends Controller
         ]);
         $request->merge([
             'user_id' => Auth::id(),
+            'type' => $type,
             // 'classroom_id' => $classroom->id,
         ]);
         $classwork = $classroom->classworks()->create($request->all());// ع مستوى الكلاس ورك بعمل كرييت
